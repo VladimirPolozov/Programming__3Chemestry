@@ -6,14 +6,21 @@
         xmlns:local="clr-namespace:FirstLab"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-      <TextBlock FontSize="15" Margin="0 12" FontFamily="montserrat" HorizontalAlignment="Center" TextAlignment="Center">Уравнение прямой y = a * x + b,<LineBreak></LineBreak>проходящей через<LineBreak></LineBreak>точки O1(x1, y1) и O2(x2, y2)</TextBlock>
-      <TextBlock FontSize="13" FontFamily="montserrat">Введите значение x1:</TextBlock>
-      <TextBox x:Name="pointX1" Margin="0 4" FontSize="12" FontFamily="montserrat" HorizontalContentAlignment="Center"></TextBox>
-      <TextBlock FontSize="13" FontFamily="montserrat">Введите значение x2:</TextBlock>
-      <TextBox x:Name="pointX2" Margin="0 4" FontSize="12" FontFamily="montserrat" HorizontalContentAlignment="Center"></TextBox>
-      <Button x:Name="findXk" Margin="0 8" FontSize="13" FontFamily="montserrat" Click="FindXkButton_Click">Определить x__k</Button>
+  <Grid>
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+      <StackPanel Margin="0,0,50,0" VerticalAlignment="Center" >
+        <TextBlock FontSize="15" Margin="0,0,0,12" FontFamily="montserrat" HorizontalAlignment="Center" TextAlignment="Center">Уравнение прямой y = a * x + b,<LineBreak></LineBreak>проходящей через<LineBreak></LineBreak>точки O1(x1, y1) и O2(x2, y2)</TextBlock>
+        <TextBlock FontSize="13" FontFamily="montserrat">Введите значение x1:</TextBlock>
+        <TextBox x:Name="pointX1" Margin="0 4" FontSize="12" FontFamily="montserrat" HorizontalContentAlignment="Center"></TextBox>
+        <TextBlock FontSize="13" FontFamily="montserrat">Введите значение x2:</TextBlock>
+        <TextBox x:Name="pointX2" Margin="0 4" FontSize="12" FontFamily="montserrat" HorizontalContentAlignment="Center"></TextBox>
+        <Button x:Name="findXk" Margin="0,8,0,0" FontSize="13" FontFamily="montserrat" Click="FindXkButton_Click">Определить x__k</Button>
+      </StackPanel>
+      <StackPanel VerticalAlignment="Center">
+        <TextBlock FontSize="15" Margin="0,0,0,8" FontFamily="montserrat" TextAlignment="Center" VerticalAlignment="Top">Данные о налогоплатильщиках</TextBlock>
+        <Button x:Name="generateData" Margin="0 8" FontSize="13" FontFamily="montserrat" Click="GenerateDataButton_Click">Сгенерировать данные</Button>
+        <Button x:Name="calculateTax" FontSize="13" FontFamily="montserrat" Click="CalculateTaxButton_Click">Рассчитать налог</Button>
+      </StackPanel>
     </StackPanel>
   </Grid>
 </Window>
