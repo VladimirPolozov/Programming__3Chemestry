@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace FirstLab
 {
@@ -23,6 +24,14 @@ namespace FirstLab
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void FindXkButton_Click(object sender, RoutedEventArgs e)
+        {
+            double pointX1Value = Int32.Parse(pointX1.Text);
+            double pointX2Value = Int32.Parse(pointX2.Text);
+            double result = (pointX1Value + pointX2Value) / 2;
+            MessageBox.Show($"x_k = {result}");
         }
     }
 }
