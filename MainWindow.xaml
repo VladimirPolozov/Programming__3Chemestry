@@ -28,7 +28,7 @@
       <StackPanel Grid.Column="0" VerticalAlignment="Top" Margin="25px 75px 25px 0">
         <TextBlock Margin="0 0 0 5px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Формула</TextBlock>
         <TextBox Margin="0 0 0 10px" Padding="0 2px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium"></TextBox>
-        <TextBlock Margin="0 0 0 5px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Число точек построения осей</TextBlock>
+        <!--<TextBlock Margin="0 0 0 5px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Число точек построения осей</TextBlock>
         <Grid Margin="0 0 0 5px">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -42,7 +42,7 @@
             <TextBlock Margin="0 0 0 5px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Ординат</TextBlock>
             <TextBox Margin="0 0 0 5px" Padding="0 2px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium"></TextBox>
           </StackPanel>
-        </Grid>
+        </Grid>-->
         <Button Margin="0 0 0 20px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" Padding="0px 5px" Background="#24A1DE" Foreground="White" BorderThickness="0">Построить функцию</Button>
         <TextBlock Margin="0 0 0 5px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Ограничение интервала (a, b)</TextBlock>
         <Grid Margin="0 0 0 10px">
