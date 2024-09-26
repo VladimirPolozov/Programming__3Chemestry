@@ -56,7 +56,8 @@
         <TextBlock Margin="0 0 0 5px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Точность эпсилон (ε)</TextBlock>
         <TextBox Margin="0 0 0 20px" Padding="0 2px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" Text="{Binding Epsilon, UpdateSourceTrigger=PropertyChanged}"></TextBox>
         <Button Height="30px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" Background="#24A1DE" Foreground="White" BorderThickness="0" Command="{Binding ConstructPlotCommand}" Margin="0 0 0 10">Построить функцию</Button>
-        <Button Height="30px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" Background="#24A1DE" Foreground="White" BorderThickness="0" Command="{Binding FindMinimumCommand}">Найти точку пересечения</Button>
+        <Button Height="30px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" Background="#24A1DE" Foreground="White" BorderThickness="0" Command="{Binding FindPointOfIntersectionCommand}" Margin="0 0 0 15">Найти точку пересечения</Button>
+        <TextBlock FontSize="14px" FontFamily="Montserrat" FontWeight="SemiBold" TextWrapping="Wrap" Text="{Binding ResultText}" ></TextBlock>
       </StackPanel>
       <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" />
       <StackPanel Grid.Column="2">

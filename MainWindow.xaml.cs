@@ -13,7 +13,7 @@ namespace FirstLab
     public class FunctionModel
     {
         //  Метод для поиска минимума методом дихотомии
-        public static double FindMinimum(string functionExpression, double parametrA, double parametrB, double epsilon)
+        public static double FindPointOfIntersectionDihotomyMethod(string functionExpression, double parametrA, double parametrB, double epsilon)
         {
             // Компиляция функции из строки
             var expression = new NCalc.Expression(functionExpression);
@@ -56,6 +56,7 @@ namespace FirstLab
         private double parametrB;
         private double epsilon;
         private PlotModel plotModel;  // основной класс в библиотеке OxyPlot, используемый для создания графиков и диаграмм
+        private string resultText;
 
         public string FunctionExpression
         {
@@ -107,25 +108,38 @@ namespace FirstLab
             }
         }
 
+        public string ResultText
+        {
+            get => resultText;
+            set
+            {
+                resultText = value;
+                OnPropertyChanged(nameof(ResultText)); // Уведомление об изменении
+            }
+        }
+
         // Команда для вызова метода
         public ICommand ConstructPlotCommand { get; }
-        public ICommand FindMinimumCommand { get; }
+        public ICommand FindPointOfIntersectionCommand { get; }
 
         public FunctionViewModel()
         {
             // Привязываем команду к методу
             ConstructPlotCommand = new RelayCommand(_ => ConstructPlot());
-            //FindMinimumCommand = new RelayCommand(_ => FunctionModel.FindMinimum());
-            
+            FindPointOfIntersectionCommand = new RelayCommand(_ => FindPointOfIntersection());
+
             // Инициализируем пустой график
             PlotModel = new PlotModel { Title = "График функции" };
         }
 
+        private void FindPointOfIntersection()
+        {
+            double result = FunctionModel.FindPointOfIntersectionDihotomyMethod(FunctionExpression, ParametrA, ParametrB, Epsilon);
+            ResultText = $"Точка пересечения (x): {result}";
+        }
+
         private void ConstructPlot()
         {
-            // Находим минимум функции методом дихотомии
-            //double minimumX = FunctionModel.FindMinimum(FunctionExpression, parametrA, parametrB, Epsilon);
-
             // Обновляем график
             PlotModel = new PlotModel { Title = "График функции" };
             var series = new LineSeries { Title = "f(x)", StrokeThickness = 2 };
@@ -134,8 +148,8 @@ namespace FirstLab
             var xAxis = new LinearAxis
             {
                 Position = AxisPosition.Bottom, // Ось X снизу
-                Minimum = -100,  // Минимум по X
-                Maximum = 100,   // Максимум по X
+                Minimum = -50,  // Минимум по X
+                Maximum = 50,   // Максимум по X
                 Title = "",  // Подпись оси
                 //MajorGridlineStyle = LineStyle.Solid, // Основная сетка
                 MinorGridlineStyle = LineStyle.Dot,   // Второстепенная сетка
@@ -146,8 +160,8 @@ namespace FirstLab
             var yAxis = new LinearAxis
             {
                 Position = AxisPosition.Left, // Ось Y слева
-                Minimum = -100,  // Минимум по Y
-                Maximum = 100,   // Максимум по Y
+                Minimum = -50,  // Минимум по Y
+                Maximum = 50,   // Максимум по Y
                 Title = "",  // Подпись оси
                 //MajorGridlineStyle = LineStyle.Solid, // Основная сетка
                 MinorGridlineStyle = LineStyle.Dot,   // Второстепенная сетка
