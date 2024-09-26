@@ -4,8 +4,11 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using System;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Media3D;
 
 
 
@@ -17,31 +20,21 @@ namespace FirstLab
         public static double FindPointOfIntersectionDihotomyMethod(string functionExpression, double parametrA, double parametrB, double epsilon)
         {
             Function expression = new Function("f(x) = " + functionExpression);
+            double parametrAValue = SolveFunc(expression, parametrA.ToString());
+            double parametrBValue = SolveFunc(expression, parametrB.ToString());
 
-            double fa = SolveFunc(expression, parametrA.ToString());
-            double fb = SolveFunc(expression, parametrB.ToString());
+            while (parametrAValue - parametrBValue < epsilon) {
+                double middleofSegment = (parametrA - parametrB) / 2;
 
-            if (fa * fb > 0)
-            {
-                throw new ArgumentException("The function must have opposite signs at the endpoints of the interval.");
-            }
-
-            while (parametrB - parametrA > epsilon)
-            {
-                double c = (parametrA + parametrB) / 2;
-                double fc = SolveFunc(expression, c.ToString().Replace(",", "."));
-
-                if (Math.Abs(fc) == 0)
+                if (parametrAValue * parametrBValue < 0)
                 {
-                    return c;
-                } else if (fa * fc < 0)
-                {
-                    parametrB = c;
-                } else
-                {
-                    parametrA = c;
-                    fa = fc;
+                    parametrA = middleofSegment;
+                } else {
+                    parametrB = middleofSegment;
                 }
+
+                parametrAValue = SolveFunc(expression, parametrA.ToString());
+                parametrBValue = SolveFunc(expression, parametrB.ToString());
             }
 
             return (parametrA + parametrB) / 2;
@@ -66,9 +59,11 @@ namespace FirstLab
         private string functionExpression;
         private double parametrA;
         private double parametrB;
-        private double epsilon;
+        private double epsilon = 0.01; 
         private PlotModel plotModel;  // основной класс в библиотеке OxyPlot, используемый для создания графиков и диаграмм
         private string resultText;
+        private int widthXAxis;
+        private int widthYAxis;
 
         public string FunctionExpression
         {
@@ -126,7 +121,27 @@ namespace FirstLab
             set
             {
                 resultText = value;
-                OnPropertyChanged(nameof(ResultText)); // Уведомление об изменении
+                OnPropertyChanged(nameof(ResultText));
+            }
+        }
+
+        public int WidthXAxis
+        {
+            get => widthXAxis;
+            set
+            {
+                widthXAxis = value;
+                OnPropertyChanged(nameof(WidthXAxis));
+            }
+        }
+
+        public int WidthYAxis
+        {
+            get => widthYAxis;
+            set
+            {
+                widthYAxis = value;
+                OnPropertyChanged(nameof(WidthYAxis));
             }
         }
 
@@ -160,8 +175,8 @@ namespace FirstLab
             var xAxis = new LinearAxis
             {
                 Position = AxisPosition.Bottom, // Ось X снизу
-                Minimum = -50,  // Минимум по X
-                Maximum = 50,   // Максимум по X
+                Minimum = WidthXAxis / -2,  // Минимум по X
+                Maximum = WidthXAxis /  2,   // Максимум по X
                 Title = "",  // Подпись оси
                 //MajorGridlineStyle = LineStyle.Solid, // Основная сетка
                 MinorGridlineStyle = LineStyle.Dot,   // Второстепенная сетка
@@ -172,8 +187,8 @@ namespace FirstLab
             var yAxis = new LinearAxis
             {
                 Position = AxisPosition.Left, // Ось Y слева
-                Minimum = -50,  // Минимум по Y
-                Maximum = 50,   // Максимум по Y
+                Minimum = WidthYAxis / -2,  // Минимум по Y
+                Maximum = WidthYAxis / 2,   // Максимум по Y
                 Title = "",  // Подпись оси
                 //MajorGridlineStyle = LineStyle.Solid, // Основная сетка
                 MinorGridlineStyle = LineStyle.Dot,   // Второстепенная сетка
@@ -185,7 +200,7 @@ namespace FirstLab
             PlotModel.Axes.Add(yAxis);
 
             // Рисуем график
-            for (double x = -100; x < 100; x += 1)
+            for (double x = xAxis.Minimum; x <= xAxis.Maximum; x += 1)
             {
                 double y = FunctionModel.EvaluateFunction(FunctionExpression, x);
                 series.Points.Add(new DataPoint(x, y));
