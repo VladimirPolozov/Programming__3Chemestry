@@ -1,4 +1,5 @@
-﻿using OxyPlot;
+﻿using org.mariuszgromada.math.mxparser;
+using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
 using System;
@@ -15,29 +16,40 @@ namespace FirstLab
         //  Метод для поиска минимума методом дихотомии
         public static double FindPointOfIntersectionDihotomyMethod(string functionExpression, double parametrA, double parametrB, double epsilon)
         {
-            // Компиляция функции из строки
-            var expression = new NCalc.Expression(functionExpression);
-            double delta = 1e-5;
+            Function expression = new Function("f(x) = " + functionExpression);
 
-            while (Math.Abs(parametrB - parametrA) > epsilon)
+            double fa = SolveFunc(expression, parametrA.ToString());
+            double fb = SolveFunc(expression, parametrB.ToString());
+
+            if (fa * fb > 0)
             {
-                double dotX1 = (parametrA + parametrB) / 2 - delta;
-                double dotX2 = (parametrA + parametrB) / 2 + delta;
+                throw new ArgumentException("The function must have opposite signs at the endpoints of the interval.");
+            }
 
-                // Подставляем x1 и x2 в функцию
-                expression.Parameters["x"] = dotX1;
-                double f1 = Convert.ToDouble(expression.Evaluate());
-                expression.Parameters["x"] = dotX2;
-                double f2 = Convert.ToDouble(expression.Evaluate());
+            while (parametrB - parametrA > epsilon)
+            {
+                double c = (parametrA + parametrB) / 2;
+                double fc = SolveFunc(expression, c.ToString().Replace(",", "."));
 
-                // Сужаем интервал поиска
-                if (f1 < f2)
-                    parametrB = dotX2;
-                else
-                    parametrA = dotX1;
+                if (Math.Abs(fc) == 0)
+                {
+                    return c;
+                } else if (fa * fc < 0)
+                {
+                    parametrB = c;
+                } else
+                {
+                    parametrA = c;
+                    fa = fc;
+                }
             }
 
             return (parametrA + parametrB) / 2;
+        }
+
+        public static double SolveFunc(Function function, string x)
+        {
+            return new org.mariuszgromada.math.mxparser.Expression($"f({x})", function).calculate();
         }
 
         //  Метод для вычисления значения функции в точке x
