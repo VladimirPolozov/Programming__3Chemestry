@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:oxy="http://oxyplot.org/wpf"
         xmlns:local="clr-namespace:FirstLab"
         mc:Ignorable="d"
         Title="Математический калькулятор" Height="450" Width="800">
@@ -27,7 +28,7 @@
       </Grid.ColumnDefinitions>
       <StackPanel Grid.Column="0" VerticalAlignment="Top" Margin="25px 75px 25px 0">
         <TextBlock Margin="0 0 0 5px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Формула</TextBlock>
-        <TextBox Margin="0 0 0 10px" Padding="0 2px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium"></TextBox>
+        <TextBox Margin="0 0 0 10px" Padding="0 2px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" Text="{Binding FunctionExpression, UpdateSourceTrigger=PropertyChanged}"></TextBox>
         <!--<TextBlock Margin="0 0 0 5px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Число точек построения осей</TextBlock>
         <Grid Margin="0 0 0 5px">
           <Grid.ColumnDefinitions>
@@ -43,22 +44,24 @@
             <TextBox Margin="0 0 0 5px" Padding="0 2px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium"></TextBox>
           </StackPanel>
         </Grid>-->
-        <Button Margin="0 0 0 20px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" Padding="0px 5px" Background="#24A1DE" Foreground="White" BorderThickness="0">Построить функцию</Button>
         <TextBlock Margin="0 0 0 5px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Ограничение интервала (a, b)</TextBlock>
         <Grid Margin="0 0 0 10px">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
           </Grid.ColumnDefinitions>
-          <TextBox Grid.Column="0" Margin="0 0 5 0" Padding="0 2px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium"></TextBox>
-          <TextBox Grid.Column="1" Margin="5 0 0 0" Padding="0 2px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium"></TextBox>
+          <TextBox Grid.Column="0" Margin="0 0 5 0" Padding="0 2px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" Text="{Binding ParametrA, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+          <TextBox Grid.Column="1" Margin="5 0 0 0" Padding="0 2px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" Text="{Binding ParametrB, UpdateSourceTrigger=PropertyChanged}"></TextBox>
         </Grid>
         <TextBlock Margin="0 0 0 5px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Точность эпсилон (ε)</TextBlock>
-        <TextBox Margin="0 0 0 10px" Padding="0 2px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium"></TextBox>
-        <Button FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" Padding="0px 5px" Background="#24A1DE" Foreground="White" BorderThickness="0">Найти точку пересечения</Button>
+        <TextBox Margin="0 0 0 20px" Padding="0 2px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" Text="{Binding Epsilon, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+        <Button Height="30px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" Background="#24A1DE" Foreground="White" BorderThickness="0" Command="{Binding ConstructPlotCommand}" Margin="0 0 0 10">Построить функцию</Button>
+        <Button Height="30px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" Background="#24A1DE" Foreground="White" BorderThickness="0" Command="{Binding FindMinimumCommand}">Найти точку пересечения</Button>
       </StackPanel>
       <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" />
-      <StackPanel Grid.Column="2"/>
+      <StackPanel Grid.Column="2">
+        <oxy:PlotView Model="{Binding PlotModel}" Margin="25px 50px" Height="300px"/>
+      </StackPanel>
     </Grid>
   </Grid>
 </Window>
