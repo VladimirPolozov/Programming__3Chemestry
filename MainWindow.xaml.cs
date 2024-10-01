@@ -4,44 +4,54 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using System;
 using System.ComponentModel;
-using System.Text.RegularExpressions;
+using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Media3D;
-
 
 
 namespace FirstLab
 {
     public class FunctionModel
     {
-        //  Метод для поиска минимума методом дихотомии
+        //  Поиск точки пересечения графика функции с осью абсцисс методом дихотомии
         public static double FindPointOfIntersectionDihotomyMethod(string functionExpression, double parametrA, double parametrB, double epsilon)
         {
             Function expression = new Function("f(x) = " + functionExpression);
             double parametrAValue = SolveFunc(expression, parametrA.ToString());
             double parametrBValue = SolveFunc(expression, parametrB.ToString());
+            double middleOfSegment = (parametrA + parametrB) / 2;
+            double middleOfSegmentValue = SolveFunc(expression, middleOfSegment.ToString());
 
-            while (parametrAValue - parametrBValue < epsilon) {
-                double middleofSegment = (parametrA - parametrB) / 2;
-
-                if (parametrAValue * parametrBValue < 0)
-                {
-                    parametrA = middleofSegment;
-                } else {
-                    parametrB = middleofSegment;
-                }
-
-                parametrAValue = SolveFunc(expression, parametrA.ToString());
-                parametrBValue = SolveFunc(expression, parametrB.ToString());
+            if (parametrAValue * parametrBValue >= 0) {
+                throw new ArgumentException("Функция не имеет точек пересечения с осью абсцисс на заданном интервале");
             }
 
-            return (parametrA + parametrB) / 2;
+            while (parametrB - parametrA >= epsilon) {
+                if (middleOfSegmentValue == 0) {
+                    break;
+                } else if (parametrAValue == 0) {
+                    return parametrA;
+                } else if (parametrBValue == 0)
+                {
+                    return parametrB;
+                } else if (parametrAValue * middleOfSegmentValue < 0)
+                {
+                    parametrB = middleOfSegment;
+                } else {
+                    parametrA = middleOfSegment;
+                    parametrAValue = middleOfSegmentValue;
+                }
+
+                middleOfSegment = (parametrA + parametrB) / 2;
+                middleOfSegmentValue = SolveFunc(expression, middleOfSegment.ToString());
+            }
+
+            return middleOfSegment;
         }
 
         public static double SolveFunc(Function function, string x)
         {
+            Console.WriteLine(x);
             return new org.mariuszgromada.math.mxparser.Expression($"f({x})", function).calculate();
         }
 
@@ -200,7 +210,7 @@ namespace FirstLab
             PlotModel.Axes.Add(yAxis);
 
             // Рисуем график
-            for (double x = xAxis.Minimum; x <= xAxis.Maximum; x += 1)
+            for (double x = xAxis.Minimum; x <= xAxis.Maximum; x += 0.1)
             {
                 double y = FunctionModel.EvaluateFunction(FunctionExpression, x);
                 series.Points.Add(new DataPoint(x, y));
