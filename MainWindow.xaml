@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
-        Title="Математический калькулятор" Height="500" Width="900">
+        Title="Математический калькулятор" Height="550" Width="950">
     <Grid>
     <Menu FontFamily="Montserrat" FontSize="13px" Height="30" VerticalAlignment="Top">
       <MenuItem FontWeight="SemiBold" Header="Методы" Margin="0 5px 0 0">
@@ -21,17 +21,16 @@
     </Menu>
     <Grid>
       <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="450" />
         <ColumnDefinition Width="Auto" />
         <ColumnDefinition Width="*" />
       </Grid.ColumnDefinitions>
-      <StackPanel Grid.Column="0" VerticalAlignment="Top" Margin="25px 75px 25px 0">
+      <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="25 0 25 0">
         <TextBlock Margin="0 0 0 5px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Формула</TextBlock>
         <TextBox Margin="0 0 0 10px" Padding="0 2px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" Text="{Binding FunctionExpression, UpdateSourceTrigger=PropertyChanged}"></TextBox>
         <TextBlock Margin="0 0 0 5px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Отображение графика</TextBlock>
-        <Grid Margin="0 0 0 10">
+        <Grid Margin="0 0 0 5">
           <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
           </Grid.ColumnDefinitions>
@@ -39,19 +38,33 @@
             <TextBlock Margin="0 0 0 5px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Длина оси Ox</TextBlock>
             <TextBox Padding="0 2px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" Text="{Binding WidthXAxis, UpdateSourceTrigger=PropertyChanged}"></TextBox>
           </StackPanel>
-          <StackPanel Grid.Column="1" Margin="0 0 10 0">
+          <StackPanel Grid.Column="1" Margin="0 0 0 0">
             <TextBlock Margin="0 0 0 5px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Длина оси Oy</TextBlock>
             <TextBox Padding="0 2px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" Text="{Binding WidthYAxis, UpdateSourceTrigger=PropertyChanged}"></TextBox>
           </StackPanel>
-          <StackPanel Grid.Column="3" Margin="0 0 0 0">
+        </Grid>
+        <Grid Margin="0 0 0 10">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+          <StackPanel Grid.Column="0" Margin="0 0 10 0">
             <TextBlock Margin="0 0 0 5px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Плавность</TextBlock>
             <ComboBox FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" Text="{Binding GraphicPointsDelta, UpdateSourceTrigger=PropertyChanged}">
-              <TextBlock>1.00</TextBlock>
-              <TextBlock>0.50</TextBlock>
-              <TextBlock>0.10</TextBlock>
-              <TextBlock>0.05</TextBlock>
+              <TextBlock>2</TextBlock>
+              <TextBlock>1</TextBlock>
+              <TextBlock>0.5</TextBlock>
+              <TextBlock>0.1</TextBlock>
               <TextBlock>0.01</TextBlock>
-              <TextBlock>0.001</TextBlock>
+            </ComboBox>
+          </StackPanel>
+          <StackPanel Grid.Column="1" Margin="0 0 0 0">
+            <TextBlock Margin="0 0 0 5px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Толщина</TextBlock>
+            <ComboBox FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" Text="{Binding GraphicThickness, UpdateSourceTrigger=PropertyChanged}">
+              <TextBlock>4</TextBlock>
+              <TextBlock>3</TextBlock>
+              <TextBlock>2</TextBlock>
+              <TextBlock>1</TextBlock>
             </ComboBox>
           </StackPanel>
         </Grid>
@@ -96,8 +109,8 @@
         <TextBlock FontSize="14px" FontFamily="Montserrat" FontWeight="SemiBold" TextWrapping="Wrap" Text="{Binding ResultText}" ></TextBlock>
       </StackPanel>
       <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" />
-      <StackPanel Grid.Column="2">
-        <oxy:PlotView Model="{Binding PlotModel}" Margin="25px 50px" Height="300px"/>
+      <StackPanel Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0 50 20 50">
+        <oxy:PlotView Model="{Binding PlotModel}" Height="400"/>
       </StackPanel>
     </Grid>
   </Grid>

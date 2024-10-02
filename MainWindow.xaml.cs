@@ -64,15 +64,16 @@ namespace FirstLab
     public class FunctionViewModel : INotifyPropertyChanged
     {
         private string functionExpression;
-        private double parametrA;
-        private double parametrB;
+        private double parametrA = 50;
+        private double parametrB = -50;
         private double epsilon = 0.01; 
         private PlotModel plotModel;  // основной класс в библиотеке OxyPlot, используемый для создания графиков и диаграмм
         private string resultText;
-        private int widthXAxis;
-        private int widthYAxis;
-        private int countOfSingsAfterComma;
-        private double graphicPointsDelta;
+        private int widthXAxis = 50;
+        private int widthYAxis = 50;
+        private int countOfSingsAfterComma = 2;
+        private double graphicPointsDelta = 0.5;
+        private double graphicThickness = 2;
 
         public string FunctionExpression
         {
@@ -174,8 +175,18 @@ namespace FirstLab
             }
         }
 
-    // Команда для вызова метода
-    public ICommand ConstructPlotCommand { get; }
+        public double GraphicThickness
+        {
+            get => graphicThickness;
+            set
+            {
+                graphicThickness = value;
+                OnPropertyChanged(nameof(GraphicThickness));
+            }
+        }
+
+        // Команда для вызова метода
+        public ICommand ConstructPlotCommand { get; }
         public ICommand FindPointOfIntersectionCommand { get; }
 
         public FunctionViewModel()
@@ -198,7 +209,7 @@ namespace FirstLab
         {
             // Обновляем график
             PlotModel = new PlotModel { Title = "График функции" };
-            var series = new LineSeries { Title = "f(x)", StrokeThickness = 2 };
+            var series = new LineSeries { Title = "f(x)", StrokeThickness = GraphicThickness };
 
             // Настройка оси X
             var xAxis = new LinearAxis
@@ -229,7 +240,7 @@ namespace FirstLab
             PlotModel.Axes.Add(yAxis);
 
             // Рисуем график
-            for (double x = xAxis.Minimum; x <= xAxis.Maximum; x += 0.1)
+            for (double x = xAxis.Minimum; x <= xAxis.Maximum; x += graphicPointsDelta)
             {
                 double y = FunctionModel.SolveFunc(FunctionModel.ConvertExpressionToFunctionFromString(FunctionExpression), x);
                 series.Points.Add(new DataPoint(x, y));
