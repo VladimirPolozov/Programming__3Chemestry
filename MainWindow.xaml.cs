@@ -4,8 +4,9 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using System;
 using System.ComponentModel;
-using System.Security.Policy;
+using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Expression = org.mariuszgromada.math.mxparser.Expression;
 
@@ -194,18 +195,18 @@ namespace FirstLab
         public FunctionViewModel()
         {
             // вставляем в форму данные по умолчанию
-            setDefaultData();
+            SetDefaultData();
 
             // Привязываем команды к методу
             ConstructPlotCommand = new RelayCommand(_ => ConstructPlot());
             FindPointOfIntersectionCommand = new RelayCommand(_ => FindPointOfIntersection());
-            SetDefaultDataCommand = new RelayCommand(_ => setDefaultData());
+            SetDefaultDataCommand = new RelayCommand(_ => SetDefaultData());
 
             // Инициализируем пустой график
             PlotModel = new PlotModel { Title = "График функции" };
         }
 
-        public void setDefaultData()
+        public void SetDefaultData()
         {
             FunctionExpression = "x";
             ParametrA = -50;
@@ -216,6 +217,7 @@ namespace FirstLab
             CountOfSingsAfterComma = 2;
             GraphicPointsDelta = 0.5;
             GraphicThickness = 2;
+            resultText = "";
         }
 
         private void FindPointOfIntersection()
