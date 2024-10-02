@@ -9,7 +9,7 @@
     <Grid>
     <Menu FontFamily="Montserrat" FontSize="13px" Height="30" VerticalAlignment="Top">
       <MenuItem FontWeight="SemiBold" Header="Методы" Margin="0 5px 0 0">
-        <MenuItem Header="Метод дихотомии"></MenuItem>
+        <MenuItem Command="{Binding FindPointOfIntersectionCommand}" Header="Найти точку пересечения методом дихотомии"></MenuItem>
       </MenuItem>
       <MenuItem FontWeight="SemiBold" Header="Данные" Margin="0 5px 0 0">
         <MenuItem Header="Сгенерировать"></MenuItem>
@@ -102,7 +102,7 @@
             </ComboBox>
           </StackPanel>
         </Grid>
-        <Button Height="30px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" Background="#24A1DE" Foreground="White" BorderThickness="0" Command="{Binding FindPointOfIntersectionCommand}" Margin="0 0 0 15">Найти точку пересечения</Button>
+        <!--<Button Height="30px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" Background="#24A1DE" Foreground="White" BorderThickness="0" Margin="0 0 0 15">Найти точку пересечения</Button>-->
         <TextBlock FontSize="14px" FontFamily="Montserrat" FontWeight="SemiBold" TextWrapping="Wrap" Text="{Binding ResultText}" ></TextBlock>
       </StackPanel>
       <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" />
