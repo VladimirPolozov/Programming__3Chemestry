@@ -72,6 +72,8 @@ namespace FirstLab
             return (parametrA + parametrB) / 2;
         }
 
+
+        //  Поиск точки максимума методом золотого сечения 
         public static double FindMaximumByGoldenSection(string functionExpression, double parametrA, double parametrB, double epsilon)
         {
             Function expression = ConvertExpressionToFunctionFromString(functionExpression);
@@ -89,6 +91,7 @@ namespace FirstLab
             } while (Math.Abs(parametrB - parametrA) < epsilon);
             return (parametrA + parametrB) / 2;
         }
+
 
         public static double SolveFunc(Function function, double x)
         {
