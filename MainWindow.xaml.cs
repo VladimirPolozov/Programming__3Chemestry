@@ -4,6 +4,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using System;
 using System.ComponentModel;
+using System.Security.Policy;
 using System.Windows;
 using System.Windows.Input;
 using Expression = org.mariuszgromada.math.mxparser.Expression;
@@ -63,17 +64,17 @@ namespace FirstLab
 
     public class FunctionViewModel : INotifyPropertyChanged
     {
-        private string functionExpression;
-        private double parametrA = -50;
-        private double parametrB = 50;
-        private double epsilon = 0.01; 
         private PlotModel plotModel;  // основной класс в библиотеке OxyPlot, используемый для создания графиков и диаграмм
+        private string functionExpression;
+        private double parametrA;
+        private double parametrB;
+        private double epsilon; 
         private string resultText;
-        private int widthXAxis = 50;
-        private int widthYAxis = 50;
-        private int countOfSingsAfterComma = 2;
-        private double graphicPointsDelta = 0.5;
-        private double graphicThickness = 2;
+        private int widthXAxis;
+        private int widthYAxis;
+        private int countOfSingsAfterComma;
+        private int graphicThickness;
+        private double graphicPointsDelta;
 
         public string FunctionExpression
         {
@@ -175,7 +176,7 @@ namespace FirstLab
             }
         }
 
-        public double GraphicThickness
+        public int GraphicThickness
         {
             get => graphicThickness;
             set
@@ -188,15 +189,33 @@ namespace FirstLab
         // Команда для вызова метода
         public ICommand ConstructPlotCommand { get; }
         public ICommand FindPointOfIntersectionCommand { get; }
+        public ICommand SetDefaultDataCommand { get; }
 
         public FunctionViewModel()
         {
-            // Привязываем команду к методу
+            // вставляем в форму данные по умолчанию
+            setDefaultData();
+
+            // Привязываем команды к методу
             ConstructPlotCommand = new RelayCommand(_ => ConstructPlot());
             FindPointOfIntersectionCommand = new RelayCommand(_ => FindPointOfIntersection());
+            SetDefaultDataCommand = new RelayCommand(_ => setDefaultData());
 
             // Инициализируем пустой график
             PlotModel = new PlotModel { Title = "График функции" };
+        }
+
+        public void setDefaultData()
+        {
+            FunctionExpression = "x";
+            ParametrA = -50;
+            ParametrB = 50;
+            Epsilon = 0.01;
+            WidthXAxis = 50;
+            WidthYAxis = 50;
+            CountOfSingsAfterComma = 2;
+            GraphicPointsDelta = 0.5;
+            GraphicThickness = 2;
         }
 
         private void FindPointOfIntersection()

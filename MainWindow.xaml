@@ -13,11 +13,9 @@
       </MenuItem>
       <MenuItem FontWeight="SemiBold" Header="Данные" Margin="0 5px 0 0">
         <MenuItem Header="Очистить"></MenuItem>
-        <MenuItem Header="Сгенерировать">
-          <MenuItem Header="По умолчанию"></MenuItem>
-          <MenuItem Header="В заданном диапазоне"></MenuItem>
+        <MenuItem Header="Сгенерировать"></MenuItem>
+        <MenuItem Header="Вставить значения по умолчанию" Command="{Binding SetDefaultDataCommand}"></MenuItem>
         </MenuItem>
-      </MenuItem>
     </Menu>
     <Grid>
       <Grid.ColumnDefinitions>
