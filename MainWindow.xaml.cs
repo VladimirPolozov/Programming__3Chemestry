@@ -23,7 +23,7 @@ namespace FirstLab
             double middleOfSegmentValue;
 
             if (parametrAValue * parametrBValue >= 0) {
-                throw new ArgumentException("Функция не имеет точек пересечения с осью абсцисс на заданном интервале");
+                throw new ArgumentException("Функция имеет более одной или не имеет точек пересечения с осью абсцисс на заданном интервале");
             }
 
             while (parametrB - parametrA > epsilon) {
@@ -64,8 +64,8 @@ namespace FirstLab
     public class FunctionViewModel : INotifyPropertyChanged
     {
         private string functionExpression;
-        private double parametrA = 50;
-        private double parametrB = -50;
+        private double parametrA = -50;
+        private double parametrB = 50;
         private double epsilon = 0.01; 
         private PlotModel plotModel;  // основной класс в библиотеке OxyPlot, используемый для создания графиков и диаграмм
         private string resultText;
@@ -80,7 +80,7 @@ namespace FirstLab
             get => functionExpression;
             set
             {
-                functionExpression = value;
+                functionExpression = value.ToLower();
                 OnPropertyChanged(nameof(FunctionExpression));
             }
         }
@@ -201,8 +201,14 @@ namespace FirstLab
 
         private void FindPointOfIntersection()
         {
-            double result = FunctionModel.FindPointOfIntersectionDihotomyMethod(FunctionExpression, ParametrA, ParametrB, Epsilon);
+            try
+            {
+                double result = FunctionModel.FindPointOfIntersectionDihotomyMethod(FunctionExpression, ParametrA, ParametrB, Epsilon);
             ResultText = $"Точка пересечения (x): {Math.Round(result, CountOfSingsAfterComma, MidpointRounding.AwayFromZero)}";
+            } catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка: {ex.Message}");
+            }
         }
 
         private void ConstructPlot()
