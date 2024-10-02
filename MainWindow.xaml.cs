@@ -4,9 +4,9 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
+using Expression = org.mariuszgromada.math.mxparser.Expression;
 
 
 namespace FirstLab
@@ -16,17 +16,20 @@ namespace FirstLab
         //  Поиск точки пересечения графика функции с осью абсцисс методом дихотомии
         public static double FindPointOfIntersectionDihotomyMethod(string functionExpression, double parametrA, double parametrB, double epsilon)
         {
-            Function expression = new Function("f(x) = " + functionExpression);
-            double parametrAValue = SolveFunc(expression, parametrA.ToString());
-            double parametrBValue = SolveFunc(expression, parametrB.ToString());
-            double middleOfSegment = (parametrA + parametrB) / 2;
-            double middleOfSegmentValue = SolveFunc(expression, middleOfSegment.ToString());
+            Function expression = ConvertExpressionToFunctionFromString(functionExpression);
+            double parametrAValue = SolveFunc(expression, parametrA);
+            double parametrBValue = SolveFunc(expression, parametrB);
+            double middleOfSegment = 0;
+            double middleOfSegmentValue;
 
             if (parametrAValue * parametrBValue >= 0) {
                 throw new ArgumentException("Функция не имеет точек пересечения с осью абсцисс на заданном интервале");
             }
 
-            while (parametrB - parametrA >= epsilon) {
+            while (parametrB - parametrA > epsilon) {
+                middleOfSegment = (parametrA + parametrB) / 2;
+                middleOfSegmentValue = SolveFunc(expression, middleOfSegment);
+
                 if (middleOfSegmentValue == 0) {
                     break;
                 } else if (parametrAValue == 0) {
@@ -41,26 +44,20 @@ namespace FirstLab
                     parametrA = middleOfSegment;
                     parametrAValue = middleOfSegmentValue;
                 }
-
-                middleOfSegment = (parametrA + parametrB) / 2;
-                middleOfSegmentValue = SolveFunc(expression, middleOfSegment.ToString());
             }
 
             return middleOfSegment;
         }
 
-        public static double SolveFunc(Function function, string x)
+        public static double SolveFunc(Function function, double x)
         {
-            Console.WriteLine(x);
-            return new org.mariuszgromada.math.mxparser.Expression($"f({x})", function).calculate();
+            return new Expression($"f({x.ToString().Replace(",", ".")})", function).calculate();
         }
 
         //  Метод для вычисления значения функции в точке x
-        public static double EvaluateFunction(string functionExpression, double x)
+        public static Function ConvertExpressionToFunctionFromString(string functionExpression)
         {
-            var expression = new NCalc.Expression(functionExpression);
-            expression.Parameters["x"] = x;
-            return Convert.ToDouble(expression.Evaluate());
+            return new Function("f(x) = " + functionExpression);
         }
     }
 
@@ -74,6 +71,8 @@ namespace FirstLab
         private string resultText;
         private int widthXAxis;
         private int widthYAxis;
+        private int countOfSingsAfterComma;
+        private double graphicPointsDelta;
 
         public string FunctionExpression
         {
@@ -155,8 +154,28 @@ namespace FirstLab
             }
         }
 
-        // Команда для вызова метода
-        public ICommand ConstructPlotCommand { get; }
+        public int CountOfSingsAfterComma
+        {
+            get => countOfSingsAfterComma;
+            set
+            {
+                countOfSingsAfterComma = value;
+                OnPropertyChanged(nameof(CountOfSingsAfterComma));
+            }
+        }
+
+        public double GraphicPointsDelta
+        {
+            get => graphicPointsDelta;
+            set
+            {
+                graphicPointsDelta = value;
+                OnPropertyChanged(nameof(GraphicPointsDelta));
+            }
+        }
+
+    // Команда для вызова метода
+    public ICommand ConstructPlotCommand { get; }
         public ICommand FindPointOfIntersectionCommand { get; }
 
         public FunctionViewModel()
@@ -172,7 +191,7 @@ namespace FirstLab
         private void FindPointOfIntersection()
         {
             double result = FunctionModel.FindPointOfIntersectionDihotomyMethod(FunctionExpression, ParametrA, ParametrB, Epsilon);
-            ResultText = $"Точка пересечения (x): {result}";
+            ResultText = $"Точка пересечения (x): {Math.Round(result, CountOfSingsAfterComma, MidpointRounding.AwayFromZero)}";
         }
 
         private void ConstructPlot()
@@ -188,8 +207,8 @@ namespace FirstLab
                 Minimum = WidthXAxis / -2,  // Минимум по X
                 Maximum = WidthXAxis /  2,   // Максимум по X
                 Title = "",  // Подпись оси
-                //MajorGridlineStyle = LineStyle.Solid, // Основная сетка
-                MinorGridlineStyle = LineStyle.Dot,   // Второстепенная сетка
+                // MajorGridlineStyle = LineStyle.Solid, // Основная сетка
+                // MinorGridlineStyle = LineStyle.Dot,   // Второстепенная сетка
                 PositionAtZeroCrossing = true // Ось X пересекается с осью Y в 0
             };
 
@@ -200,8 +219,8 @@ namespace FirstLab
                 Minimum = WidthYAxis / -2,  // Минимум по Y
                 Maximum = WidthYAxis / 2,   // Максимум по Y
                 Title = "",  // Подпись оси
-                //MajorGridlineStyle = LineStyle.Solid, // Основная сетка
-                MinorGridlineStyle = LineStyle.Dot,   // Второстепенная сетка
+                // MajorGridlineStyle = LineStyle.Solid, // Основная сетка
+                // MinorGridlineStyle = LineStyle.Dot,   // Второстепенная сетка
                 PositionAtZeroCrossing = true // Ось Y пересекается с осью X в 0
             };
 
@@ -212,7 +231,7 @@ namespace FirstLab
             // Рисуем график
             for (double x = xAxis.Minimum; x <= xAxis.Maximum; x += 0.1)
             {
-                double y = FunctionModel.EvaluateFunction(FunctionExpression, x);
+                double y = FunctionModel.SolveFunc(FunctionModel.ConvertExpressionToFunctionFromString(FunctionExpression), x);
                 series.Points.Add(new DataPoint(x, y));
             }
 

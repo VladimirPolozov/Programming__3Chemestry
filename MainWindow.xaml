@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
-        Title="Математический калькулятор" Height="500" Width="800">
+        Title="Математический калькулятор" Height="500" Width="900">
     <Grid>
     <Menu FontFamily="Montserrat" FontSize="13px" Height="30" VerticalAlignment="Top">
       <MenuItem FontWeight="SemiBold" Header="Методы" Margin="0 5px 0 0">
@@ -28,22 +28,34 @@
       <StackPanel Grid.Column="0" VerticalAlignment="Top" Margin="25px 75px 25px 0">
         <TextBlock Margin="0 0 0 5px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Формула</TextBlock>
         <TextBox Margin="0 0 0 10px" Padding="0 2px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" Text="{Binding FunctionExpression, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-        <TextBlock Margin="0 0 0 5px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Число точек построения осей</TextBlock>
-        <Grid Margin="0 0 0 5px">
+        <TextBlock Margin="0 0 0 5px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Отображение графика</TextBlock>
+        <Grid Margin="0 0 0 10">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
           </Grid.ColumnDefinitions>
-          <StackPanel Grid.Column="0" Margin="0 0 5px 0">
-            <TextBlock Margin="0 0 0 5px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Абсцис (x)</TextBlock>
-            <TextBox Margin="0 0 0 5px" Padding="0 2px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" Text="{Binding WidthXAxis, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+          <StackPanel Grid.Column="0" Margin="0 0 10 0">
+            <TextBlock Margin="0 0 0 5px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Длина оси Ox</TextBlock>
+            <TextBox Padding="0 2px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" Text="{Binding WidthXAxis, UpdateSourceTrigger=PropertyChanged}"></TextBox>
           </StackPanel>
-          <StackPanel Grid.Column="1" Margin="5px 0 0 0">
-            <TextBlock Margin="0 0 0 5px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Ординат (y)</TextBlock>
-            <TextBox Margin="0 0 0 5px" Padding="0 2px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" Text="{Binding WidthYAxis, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+          <StackPanel Grid.Column="1" Margin="0 0 10 0">
+            <TextBlock Margin="0 0 0 5px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Длина оси Oy</TextBlock>
+            <TextBox Padding="0 2px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" Text="{Binding WidthYAxis, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+          </StackPanel>
+          <StackPanel Grid.Column="3" Margin="0 0 0 0">
+            <TextBlock Margin="0 0 0 5px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Плавность</TextBlock>
+            <ComboBox FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" Text="{Binding GraphicPointsDelta, UpdateSourceTrigger=PropertyChanged}">
+              <TextBlock>1.00</TextBlock>
+              <TextBlock>0.50</TextBlock>
+              <TextBlock>0.10</TextBlock>
+              <TextBlock>0.05</TextBlock>
+              <TextBlock>0.01</TextBlock>
+              <TextBlock>0.001</TextBlock>
+            </ComboBox>
           </StackPanel>
         </Grid>
-        <Button Height="30px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" Background="#24A1DE" Foreground="White" BorderThickness="0" Command="{Binding ConstructPlotCommand}" Margin="0 0 0 20">Построить функцию</Button>
+        <Button Height="30px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" Background="#24A1DE" Foreground="White" BorderThickness="0" Command="{Binding ConstructPlotCommand}" Margin="0 0 0 20">Построить график функции</Button>
         <TextBlock Margin="0 0 0 5px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Ограничение интервала (a, b)</TextBlock>
         <Grid Margin="0 0 0 10px">
           <Grid.ColumnDefinitions>
@@ -53,14 +65,33 @@
           <TextBox Grid.Column="0" Margin="0 0 5 0" Padding="0 2px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" Text="{Binding ParametrA, UpdateSourceTrigger=PropertyChanged}"></TextBox>
           <TextBox Grid.Column="1" Margin="5 0 0 0" Padding="0 2px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" Text="{Binding ParametrB, UpdateSourceTrigger=PropertyChanged}"></TextBox>
         </Grid>
-        <TextBlock Margin="0 0 0 5px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Точность эпсилон (ε)</TextBlock>
-        <ComboBox Margin="0 0 0 10px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" Text="{Binding Epsilon, UpdateSourceTrigger=PropertyChanged}">
-          <TextBlock>0.001</TextBlock>
-          <TextBlock>0.01</TextBlock>
-          <TextBlock>0.1</TextBlock>
-          <TextBlock>1</TextBlock>
-        </ComboBox>
-        <!--<TextBox Margin="0 0 0 10px" Padding="0 2px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" Text="{Binding Epsilon, UpdateSourceTrigger=PropertyChanged}"></TextBox>-->
+        <TextBlock Margin="0 0 0 5px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Точность результата</TextBlock>
+        <Grid Margin="0 0 0 10px">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+          <StackPanel Grid.Column="0" Margin="0 0 5px 0">
+            <TextBlock Margin="0 0 0 5px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Мин. сужение отрезка (ε)</TextBlock>
+            <ComboBox FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" Text="{Binding Epsilon, UpdateSourceTrigger=PropertyChanged}">
+              <TextBlock>0.001</TextBlock>
+              <TextBlock>0.01</TextBlock>
+              <TextBlock>0.1</TextBlock>
+              <TextBlock>1</TextBlock>
+            </ComboBox>
+          </StackPanel>
+          <StackPanel Grid.Column="1" Margin="5px 0 0 0">
+            <TextBlock Margin="0 0 0 5px" FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" TextWrapping="Wrap">Кол-во знаков после запятой</TextBlock>
+            <ComboBox FontSize="12px" FontFamily="Montserrat" FontWeight="Medium" Text="{Binding CountOfSingsAfterComma, UpdateSourceTrigger=PropertyChanged}">
+              <TextBlock>0</TextBlock>
+              <TextBlock>1</TextBlock>
+              <TextBlock>2</TextBlock>
+              <TextBlock>3</TextBlock>
+              <TextBlock>4</TextBlock>
+              <TextBlock>5</TextBlock>
+            </ComboBox>
+          </StackPanel>
+        </Grid>
         <Button Height="30px" FontSize="14px" FontFamily="Montserrat" FontWeight="Medium" Background="#24A1DE" Foreground="White" BorderThickness="0" Command="{Binding FindPointOfIntersectionCommand}" Margin="0 0 0 15">Найти точку пересечения</Button>
         <TextBlock FontSize="14px" FontFamily="Montserrat" FontWeight="SemiBold" TextWrapping="Wrap" Text="{Binding ResultText}" ></TextBlock>
       </StackPanel>
