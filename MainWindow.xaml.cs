@@ -15,6 +15,8 @@ namespace FirstLab
 {
     public class FunctionModel
     {
+        private static readonly double PHI = (1 + Math.Sqrt(5)) / 2;
+
         //  Поиск точки пересечения графика функции с осью абсцисс методом дихотомии
         public static double FindPointOfIntersectionDihotomyMethod(string functionExpression, double parametrA, double parametrB, double epsilon)
         {
@@ -49,6 +51,43 @@ namespace FirstLab
             }
 
             return middleOfSegment;
+        }
+
+        //  Поиск точки минимума методом золотого сечения 
+        public static double FindMinimumByGoldenSection(string functionExpression, double parametrA, double parametrB, double epsilon)
+        {
+            Function expression = ConvertExpressionToFunctionFromString(functionExpression);
+            do
+            {
+                double firstDot = parametrB - (parametrB - parametrA) / PHI;
+                double secondDot = parametrA + (parametrB - parametrA) / PHI;
+                if (SolveFunc(expression, firstDot) >= SolveFunc(expression, secondDot))
+                {
+                    parametrA = firstDot;
+                } else
+                {
+                    parametrB = secondDot;
+                }
+            } while (Math.Abs(parametrB - parametrA) < epsilon);
+            return (parametrA + parametrB) / 2;
+        }
+
+        public static double FindMaximumByGoldenSection(string functionExpression, double parametrA, double parametrB, double epsilon)
+        {
+            Function expression = ConvertExpressionToFunctionFromString(functionExpression);
+            do
+            {
+                double firstDot = parametrB - (parametrB - parametrA) / PHI;
+                double secondDot = parametrA + (parametrB - parametrA) / PHI;
+                if (SolveFunc(expression, firstDot) <= SolveFunc(expression, secondDot))
+                {
+                    parametrA = firstDot;
+                } else
+                {
+                    parametrB = secondDot;
+                }
+            } while (Math.Abs(parametrB - parametrA) < epsilon);
+            return (parametrA + parametrB) / 2;
         }
 
         public static double SolveFunc(Function function, double x)
@@ -191,6 +230,8 @@ namespace FirstLab
         public ICommand ConstructPlotCommand { get; }
         public ICommand FindPointOfIntersectionCommand { get; }
         public ICommand SetDefaultDataCommand { get; }
+        public ICommand FindMinimumByGoldenSectionCommand { get; }
+        public ICommand FindMaximumByGoldenSectionCommand { get; }
 
         public FunctionViewModel()
         {
@@ -201,6 +242,8 @@ namespace FirstLab
             ConstructPlotCommand = new RelayCommand(_ => ConstructPlot());
             FindPointOfIntersectionCommand = new RelayCommand(_ => FindPointOfIntersection());
             SetDefaultDataCommand = new RelayCommand(_ => SetDefaultData());
+            FindMinimumByGoldenSectionCommand = new RelayCommand(_ => FindMinimum());
+            FindMaximumByGoldenSectionCommand = new RelayCommand(_ => FindMaximum());
 
             // Инициализируем пустой график
             PlotModel = new PlotModel { Title = "График функции" };
@@ -227,6 +270,32 @@ namespace FirstLab
                 double result = FunctionModel.FindPointOfIntersectionDihotomyMethod(FunctionExpression, ParametrA, ParametrB, Epsilon);
             ResultText = $"Точка пересечения (x): {Math.Round(result, CountOfSingsAfterComma, MidpointRounding.AwayFromZero)}";
             } catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка: {ex.Message}");
+            }
+        }
+
+        private void FindMinimum()
+        {
+            try
+            {
+                double result = FunctionModel.FindMinimumByGoldenSection(FunctionExpression, ParametrA, ParametrB, Epsilon);
+                ResultText = $"Точка минимума (x): {Math.Round(result, CountOfSingsAfterComma, MidpointRounding.AwayFromZero)}";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка: {ex.Message}");
+            }
+        }
+
+        private void FindMaximum()
+        {
+            try
+            {
+                double result = FunctionModel.FindMaximumByGoldenSection(FunctionExpression, ParametrA, ParametrB, Epsilon);
+                ResultText = $"Точка максимума (x): {Math.Round(result, CountOfSingsAfterComma, MidpointRounding.AwayFromZero)}";
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка: {ex.Message}");
             }
