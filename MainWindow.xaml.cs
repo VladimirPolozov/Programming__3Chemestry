@@ -271,7 +271,7 @@ namespace FirstLab
             try
             {
                 double result = FunctionModel.FindPointOfIntersectionDihotomyMethod(FunctionExpression, ParametrA, ParametrB, Epsilon);
-            ResultText = $"Точка пересечения (x): {Math.Round(result, CountOfSingsAfterComma, MidpointRounding.AwayFromZero)}";
+                ResultText = $"Точка пересечения (x): {Math.Round(result, CountOfSingsAfterComma, MidpointRounding.AwayFromZero)}";
             } catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка: {ex.Message}");
