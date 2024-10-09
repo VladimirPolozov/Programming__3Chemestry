@@ -3,6 +3,7 @@ using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
@@ -22,7 +23,7 @@ namespace FirstLab
             double middleOfSegment = 0;
             double middleOfSegmentValue;
 
-            if (parametrAValue * parametrBValue >= 0) {
+            if (parametrAValue * parametrBValue > 0) {
                 throw new ArgumentException("Функция имеет более одной или не имеет точек пересечения с осью абсцисс на заданном интервале");
             }
 
@@ -223,14 +224,18 @@ namespace FirstLab
             try
             {
                 double result = FunctionModel.FindPointOfIntersectionDihotomyMethod(FunctionExpression, ParametrA, ParametrB, Epsilon);
-            ResultText = $"Точка пересечения (x): {Math.Round(result, CountOfSingsAfterComma, MidpointRounding.AwayFromZero)}";
+                ResultText = $"Точка пересечения (x): {Math.Round(result, CountOfSingsAfterComma, MidpointRounding.AwayFromZero)}";
+                var pointsOfIntersection = new LineSeries { Title = "f(x)", StrokeThickness = 10, Color = OxyColors.Red };
+                pointsOfIntersection.Points.Add(new DataPoint(result + 0.5, 0));
+                pointsOfIntersection.Points.Add(new DataPoint(result - 0.5, 0));
+                ConstructPlot(pointsOfIntersection);
             } catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка: {ex.Message}");
             }
         }
 
-        private void ConstructPlot()
+        private void ConstructPlot(LineSeries points = null)
         {
             // Обновляем график
             PlotModel = new PlotModel { Title = "График функции" };
@@ -273,6 +278,10 @@ namespace FirstLab
 
             PlotModel.Series.Clear();
             PlotModel.Series.Add(series);
+            if (points != null)
+            {
+                PlotModel.Series.Add(points);
+            }
             PlotModel.InvalidatePlot(true);
         }
 
