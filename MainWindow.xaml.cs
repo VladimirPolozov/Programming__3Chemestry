@@ -4,9 +4,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using Expression = org.mariuszgromada.math.mxparser.Expression;
 
@@ -68,7 +66,7 @@ namespace FirstLab
                 {
                     parametrB = secondDot;
                 }
-            } while (Math.Abs(parametrB - parametrA) < epsilon);
+            } while (Math.Abs(parametrB - parametrA) > epsilon);
             return (parametrA + parametrB) / 2;
         }
 
@@ -88,7 +86,7 @@ namespace FirstLab
                 {
                     parametrB = secondDot;
                 }
-            } while (Math.Abs(parametrB - parametrA) < epsilon);
+            } while (Math.Abs(parametrB - parametrA) > epsilon);
             return (parametrA + parametrB) / 2;
         }
 
@@ -272,6 +270,10 @@ namespace FirstLab
             {
                 double result = FunctionModel.FindPointOfIntersectionDihotomyMethod(FunctionExpression, ParametrA, ParametrB, Epsilon);
                 ResultText = $"Точка пересечения (x): {Math.Round(result, CountOfSingsAfterComma, MidpointRounding.AwayFromZero)}";
+                var pointsOfIntersection = new LineSeries { Title = "f(x)", StrokeThickness = 10, Color = OxyColors.Red };
+                pointsOfIntersection.Points.Add(new DataPoint(result + 0.5, 0));
+                pointsOfIntersection.Points.Add(new DataPoint(result - 0.5, 0));
+                ConstructPlot(pointsOfIntersection);
             } catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка: {ex.Message}");
@@ -284,6 +286,10 @@ namespace FirstLab
             {
                 double result = FunctionModel.FindMinimumByGoldenSection(FunctionExpression, ParametrA, ParametrB, Epsilon);
                 ResultText = $"Точка минимума (x): {Math.Round(result, CountOfSingsAfterComma, MidpointRounding.AwayFromZero)}";
+                var pointsOfIntersection = new LineSeries { Title = "f(x)", StrokeThickness = 10, Color = OxyColors.Red };
+                pointsOfIntersection.Points.Add(new DataPoint(result + 0.5, FunctionModel.SolveFunc(FunctionModel.ConvertExpressionToFunctionFromString(FunctionExpression), result + 0.5)));
+                pointsOfIntersection.Points.Add(new DataPoint(result - 0.5, FunctionModel.SolveFunc(FunctionModel.ConvertExpressionToFunctionFromString(FunctionExpression), result - 0.5)));
+                ConstructPlot(pointsOfIntersection);
             }
             catch (Exception ex)
             {
@@ -297,6 +303,10 @@ namespace FirstLab
             {
                 double result = FunctionModel.FindMaximumByGoldenSection(FunctionExpression, ParametrA, ParametrB, Epsilon);
                 ResultText = $"Точка максимума (x): {Math.Round(result, CountOfSingsAfterComma, MidpointRounding.AwayFromZero)}";
+                var pointsOfIntersection = new LineSeries { Title = "f(x)", StrokeThickness = 10, Color = OxyColors.Red };
+                pointsOfIntersection.Points.Add(new DataPoint(result + 0.5, FunctionModel.SolveFunc(FunctionModel.ConvertExpressionToFunctionFromString(FunctionExpression), result + 0.5)));
+                pointsOfIntersection.Points.Add(new DataPoint(result - 0.5, FunctionModel.SolveFunc(FunctionModel.ConvertExpressionToFunctionFromString(FunctionExpression), result - 0.5)));
+                ConstructPlot(pointsOfIntersection);
             }
             catch (Exception ex)
             {
@@ -304,7 +314,7 @@ namespace FirstLab
             }
         }
 
-        private void ConstructPlot()
+        private void ConstructPlot(LineSeries points = null)
         {
             // Обновляем график
             PlotModel = new PlotModel { Title = "График функции" };
@@ -347,6 +357,9 @@ namespace FirstLab
 
             PlotModel.Series.Clear();
             PlotModel.Series.Add(series);
+            if (points != null) {
+                PlotModel.Series.Add(points);
+            }
             PlotModel.InvalidatePlot(true);
         }
 
