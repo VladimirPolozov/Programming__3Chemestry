@@ -91,16 +91,11 @@ namespace FirstLab
             return (parametrA + parametrB) / 2;
         }
 
+        // Поиск точки пересечения (нуль функции) методом Ньютона
         public static double FindPointOfIntersectionNewtonMethod(string functionExpression, double parametrB, double epsilon)
         {
             Function expression = ConvertExpressionToFunctionFromString(functionExpression);
-            double nextPoint = parametrB;
-            do
-            {
-                parametrB = nextPoint;
-                nextPoint = parametrB - (SolveFunc(expression, parametrB) / GetDerivative(expression, parametrB));
-            } while (Math.Abs(parametrB - nextPoint) > epsilon);
-            return nextPoint;
+            return parametrB - (SolveFunc(expression, parametrB) / GetDerivative(expression, parametrB));
         }
 
         public static double GetDerivative(Function function, double point)
@@ -290,10 +285,7 @@ namespace FirstLab
             {
                 double result = FunctionModel.FindPointOfIntersectionDihotomyMethod(FunctionExpression, ParametrA, ParametrB, Epsilon);
                 ResultText = $"Точка пересечения (x): {Math.Round(result, CountOfSingsAfterComma, MidpointRounding.AwayFromZero)}";
-                var pointOfIntersection = new LineSeries { Title = "f(x)", StrokeThickness = 10, Color = OxyColors.Red };
-                pointOfIntersection.Points.Add(new DataPoint(result + 0.5, 0));
-                pointOfIntersection.Points.Add(new DataPoint(result - 0.5, 0));
-                ConstructPlot(pointOfIntersection);
+                ConstructPlot(result);
             } catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка: {ex.Message}");
@@ -303,11 +295,16 @@ namespace FirstLab
         public void FindPointOfIntersectionNewton()
         {
             try {
-                double result = FunctionModel.FindPointOfIntersectionNewtonMethod(FunctionExpression, ParametrB, Epsilon);
-                ResultText = $"Точка пересечения (x): {Math.Round(result, CountOfSingsAfterComma, MidpointRounding.AwayFromZero)}";
-                var pointOfIntersection = new LineSeries { Title = "f(x)", StrokeThickness = 10, Color = OxyColors.Red };
-                pointOfIntersection.Points.Add(new DataPoint(result + 0.5, 0));
-                pointOfIntersection.Points.Add(new DataPoint(result - 0.5, 0));
+                double currentPoint;
+                double nextPoint = parametrB;
+                do
+                {
+                    currentPoint = nextPoint;
+                    nextPoint = FunctionModel.FindPointOfIntersectionNewtonMethod(FunctionExpression, currentPoint, Epsilon);
+                    ConstructPlot(nextPoint);
+                    MessageBox.Show($"Промежуточный результат: x_i = {Math.Round(nextPoint, CountOfSingsAfterComma, MidpointRounding.AwayFromZero)}");
+                } while (Math.Abs(nextPoint - currentPoint) > epsilon);
+                ResultText = $"Точка пересечения (x): {Math.Round(nextPoint, CountOfSingsAfterComma, MidpointRounding.AwayFromZero)}";
             }
             catch (Exception ex)
             {
@@ -321,10 +318,7 @@ namespace FirstLab
             {
                 double result = FunctionModel.FindMinimumByGoldenSection(FunctionExpression, ParametrA, ParametrB, Epsilon);
                 ResultText = $"Точка минимума (x): {Math.Round(result, CountOfSingsAfterComma, MidpointRounding.AwayFromZero)}";
-                var minimum = new LineSeries { Title = "f(x)", StrokeThickness = 10, Color = OxyColors.Red };
-                minimum.Points.Add(new DataPoint(result + 0.5, FunctionModel.SolveFunc(FunctionModel.ConvertExpressionToFunctionFromString(FunctionExpression), result + 0.5)));
-                minimum.Points.Add(new DataPoint(result - 0.5, FunctionModel.SolveFunc(FunctionModel.ConvertExpressionToFunctionFromString(FunctionExpression), result - 0.5)));
-                ConstructPlot(minimum);
+                ConstructPlot(result);
             }
             catch (Exception ex)
             {
@@ -338,10 +332,7 @@ namespace FirstLab
             {
                 double result = FunctionModel.FindMaximumByGoldenSection(FunctionExpression, ParametrA, ParametrB, Epsilon);
                 ResultText = $"Точка максимума (x): {Math.Round(result, CountOfSingsAfterComma, MidpointRounding.AwayFromZero)}";
-                var maximum = new LineSeries { Title = "f(x)", StrokeThickness = 10, Color = OxyColors.Red };
-                maximum.Points.Add(new DataPoint(result + 0.5, FunctionModel.SolveFunc(FunctionModel.ConvertExpressionToFunctionFromString(FunctionExpression), result + 0.5)));
-                maximum.Points.Add(new DataPoint(result - 0.5, FunctionModel.SolveFunc(FunctionModel.ConvertExpressionToFunctionFromString(FunctionExpression), result - 0.5)));
-                ConstructPlot(maximum);
+                ConstructPlot(result);
             }
             catch (Exception ex)
             {
@@ -349,7 +340,60 @@ namespace FirstLab
             }
         }
 
-        private void ConstructPlot(LineSeries points = null)
+        private void ConstructPlot(double markCoordX)
+        {
+            // Обновляем график
+            PlotModel = new PlotModel { Title = "График функции" };
+            var series = new LineSeries { Title = "f(x)", StrokeThickness = GraphicThickness };
+            var mark = new LineSeries { Title = "f(x)", StrokeThickness = 1, Color = OxyColors.Blue };
+
+            // Настройка оси X
+            var xAxis = new LinearAxis
+            {
+                Position = AxisPosition.Bottom, // Ось X снизу
+                Minimum = WidthXAxis / -2,  // Минимум по X
+                Maximum = WidthXAxis / 2,   // Максимум по X
+                Title = "",  // Подпись оси
+                // MajorGridlineStyle = LineStyle.Solid, // Основная сетка
+                // MinorGridlineStyle = LineStyle.Dot,   // Второстепенная сетка
+                PositionAtZeroCrossing = true // Ось X пересекается с осью Y в 0
+            };
+
+            // Настройка оси Y
+            var yAxis = new LinearAxis
+            {
+                Position = AxisPosition.Left, // Ось Y слева
+                Minimum = WidthYAxis / -2,  // Минимум по Y
+                Maximum = WidthYAxis / 2,   // Максимум по Y
+                Title = "",  // Подпись оси
+                // MajorGridlineStyle = LineStyle.Solid, // Основная сетка
+                // MinorGridlineStyle = LineStyle.Dot,   // Второстепенная сетка
+                PositionAtZeroCrossing = true // Ось Y пересекается с осью X в 0
+            };
+
+            // Добавляем оси в модель
+            PlotModel.Axes.Add(xAxis);
+            PlotModel.Axes.Add(yAxis);
+
+            // Рисуем график
+            for (double x = xAxis.Minimum; x <= xAxis.Maximum; x += graphicPointsDelta)
+            {
+                double y = FunctionModel.SolveFunc(FunctionModel.ConvertExpressionToFunctionFromString(FunctionExpression), x);
+                series.Points.Add(new DataPoint(x, y));
+            }
+
+            // Рисуем вертикальную линию
+            for (double y = yAxis.Minimum; y <= yAxis.Maximum; y += 1)
+            {
+                mark.Points.Add(new DataPoint(markCoordX, y));
+            }
+
+            PlotModel.Series.Add(series);
+            PlotModel.Series.Add(mark);
+            PlotModel.InvalidatePlot(true);
+        }
+
+        private void ConstructPlot()
         {
             // Обновляем график
             PlotModel = new PlotModel { Title = "График функции" };
@@ -390,11 +434,7 @@ namespace FirstLab
                 series.Points.Add(new DataPoint(x, y));
             }
 
-            PlotModel.Series.Clear();
             PlotModel.Series.Add(series);
-            if (points != null) {
-                PlotModel.Series.Add(points);
-            }
             PlotModel.InvalidatePlot(true);
         }
 

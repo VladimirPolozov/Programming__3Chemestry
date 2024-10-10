@@ -10,7 +10,7 @@
     <Menu FontFamily="Montserrat" FontSize="13px" Height="30" VerticalAlignment="Top">
       <MenuItem FontWeight="SemiBold" Header="Методы" Margin="0 5px 0 0">
         <MenuItem Header="Найти точку пересечения (нуль функции)">
-           <MenuItem Command="{Binding FindPointOfIntersectionDihotomyCommand}" Header="Методом дихотомии"></MenuItem>
+          <MenuItem Command="{Binding FindPointOfIntersectionDihotomyCommand}" Header="Методом дихотомии"></MenuItem>
           <MenuItem Command="{Binding FindPointOfIntersectionNewtonCommand}" Header="Методом касательных (Ньютона)"></MenuItem>
         </MenuItem>
         <MenuItem Command="{Binding FindMinimumByGoldenSectionCommand}" Header="Точку минимума методом золотого сечения"></MenuItem>
