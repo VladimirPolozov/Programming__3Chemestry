@@ -24,9 +24,12 @@ namespace FirstLab
             double parametrBValue = SolveFunc(expression, parametrB);
             double middleOfSegment = 0;
             double middleOfSegmentValue;
+            double xMin = Math.Round(FindMinimumByGoldenSection(functionExpression, parametrA, parametrB, epsilon), 2, MidpointRounding.AwayFromZero);
+            double xMinValue = SolveFunc(expression, xMin);
 
-            if (parametrAValue * parametrBValue >= 0) {
-                throw new ArgumentException("Функция имеет более одной или не имеет точек пересечения с осью абсцисс на заданном интервале");
+            if (parametrAValue * xMinValue > 0 && parametrBValue * xMinValue > 0)
+            {
+                throw new ArgumentException("Функция имеет более не имеет точек пересечения с осью абсцисс на заданном интервале, либо их количество чётно");
             }
 
             while (parametrB - parametrA > epsilon) {
@@ -92,10 +95,21 @@ namespace FirstLab
         }
 
         // Поиск точки пересечения (нуль функции) методом Ньютона
-        public static double FindPointOfIntersectionNewtonMethod(string functionExpression, double parametrB, double epsilon)
+        public static double FindPointOfIntersectionNewtonMethod(string functionExpression, double parametrB)
         {
             Function expression = ConvertExpressionToFunctionFromString(functionExpression);
             return parametrB - (SolveFunc(expression, parametrB) / GetDerivative(expression, parametrB));
+        }
+
+        // Поиск экстремума (точка минимума или максимума) методом Ньютона
+        public static double FindExtremeNewtonMethod(string functionExpression, double parametrB)
+        {
+            Argument argument = new Argument($"x = {parametrB}");
+            Expression firstDerivative = new Expression($"der(({functionExpression}), x)", argument);
+            Expression secondDerivative = new Expression($"der(der({functionExpression}, x), x)", argument);
+            double firstDerivativeValue = firstDerivative.calculate();
+            double secondDerivativeValue = secondDerivative.calculate();
+            return parametrB - (firstDerivativeValue / secondDerivativeValue);
         }
 
         public static double GetDerivative(Function function, double point)
@@ -247,6 +261,7 @@ namespace FirstLab
         public ICommand SetDefaultDataCommand { get; }
         public ICommand FindMinimumByGoldenSectionCommand { get; }
         public ICommand FindMaximumByGoldenSectionCommand { get; }
+        public ICommand FindExtremeNewtonCommand { get; }
 
         public FunctionViewModel()
         {
@@ -260,6 +275,7 @@ namespace FirstLab
             SetDefaultDataCommand = new RelayCommand(_ => SetDefaultData());
             FindMinimumByGoldenSectionCommand = new RelayCommand(_ => FindMinimum());
             FindMaximumByGoldenSectionCommand = new RelayCommand(_ => FindMaximum());
+            FindExtremeNewtonCommand = new RelayCommand(_ => FindExtremeNewton());
 
             // Инициализируем пустой график
             PlotModel = new PlotModel { Title = "График функции" };
@@ -300,7 +316,28 @@ namespace FirstLab
                 do
                 {
                     currentPoint = nextPoint;
-                    nextPoint = FunctionModel.FindPointOfIntersectionNewtonMethod(FunctionExpression, currentPoint, Epsilon);
+                    nextPoint = FunctionModel.FindPointOfIntersectionNewtonMethod(FunctionExpression, currentPoint);
+                    ConstructPlot(currentPoint);
+                    MessageBox.Show($"Промежуточный результат: x_i = {Math.Round(nextPoint, CountOfSingsAfterComma, MidpointRounding.AwayFromZero)}");
+                } while (Math.Abs(nextPoint - currentPoint) > epsilon);
+                ResultText = $"Точка пересечения (x): {Math.Round(nextPoint, CountOfSingsAfterComma, MidpointRounding.AwayFromZero)}";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка: {ex.Message}");
+            }
+        }
+
+        public void FindExtremeNewton()
+        {
+            try
+            {
+                double currentPoint;
+                double nextPoint = parametrB;
+                do
+                {
+                    currentPoint = nextPoint;
+                    nextPoint = FunctionModel.FindExtremeNewtonMethod(FunctionExpression, currentPoint);
                     ConstructPlot(nextPoint);
                     MessageBox.Show($"Промежуточный результат: x_i = {Math.Round(nextPoint, CountOfSingsAfterComma, MidpointRounding.AwayFromZero)}");
                 } while (Math.Abs(nextPoint - currentPoint) > epsilon);
@@ -310,6 +347,7 @@ namespace FirstLab
             {
                 MessageBox.Show($"Ошибка: {ex.Message}");
             }
+
         }
 
         private void FindMinimum()

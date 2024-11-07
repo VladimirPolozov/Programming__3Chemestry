@@ -13,13 +13,16 @@
           <MenuItem Command="{Binding FindPointOfIntersectionDihotomyCommand}" Header="Методом дихотомии"></MenuItem>
           <MenuItem Command="{Binding FindPointOfIntersectionNewtonCommand}" Header="Методом касательных (Ньютона)"></MenuItem>
         </MenuItem>
-        <MenuItem Command="{Binding FindMinimumByGoldenSectionCommand}" Header="Точку минимума методом золотого сечения"></MenuItem>
-        <MenuItem Command="{Binding FindMaximumByGoldenSectionCommand}" Header="Точку максимума методом золотого сечения"></MenuItem>
+        <MenuItem Header="Поиск экстремума">
+          <MenuItem Command="{Binding FindExtremeNewtonCommand}" Header="Экстремум методом Ньютона"></MenuItem>
+          <MenuItem Command="{Binding FindMinimumByGoldenSectionCommand}" Header="Точку минимума методом золотого сечения"></MenuItem>
+          <MenuItem Command="{Binding FindMaximumByGoldenSectionCommand}" Header="Точку максимума методом золотого сечения"></MenuItem>
+        </MenuItem>
       </MenuItem>
       <MenuItem FontWeight="SemiBold" Header="Данные" Margin="0 5px 0 0">
         <MenuItem Header="Сгенерировать"></MenuItem>
         <MenuItem Header="Вставить значения по умолчанию" Command="{Binding SetDefaultDataCommand}"></MenuItem>
-        </MenuItem>
+      </MenuItem>
     </Menu>
     <Grid>
       <Grid.ColumnDefinitions>
